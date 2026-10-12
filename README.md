@@ -1,75 +1,72 @@
 # Attacker Tree
 
-Attacker Tree is a local-first workspace for mapping attack paths and documenting findings during authorised security assessments or cybersecurity learning. Build a clear tree of investigation steps, track their status, and keep notes and evidence together.
+A local-first, manually operated attack-tree documentation workspace for authorised security assessments and cybersecurity learning. It records investigation paths; it does not scan targets or execute exploits.
 
-It is a documentation tool: it does not scan targets or run exploits.
+## Technology choices
 
-## Features
+- **React + Vite** provide a lightweight interface and a straightforward Windows development workflow.
+- **@xyflow/react** provides the interactive hierarchical canvas, node dragging, connectors, zoom, pan, controls and minimap.
+- **IndexedDB** stores multiple projects and their evidence locally in the browser.
+- **html-to-image + jsPDF** render a tree image into a downloadable PDF.
+- **Vitest** tests the core data-model helpers.
 
-- **Visual attack trees** — add, connect, move, collapse, and focus branches on an interactive canvas.
-- **Investigation tracking** — mark nodes as Untested, Investigating, Confirmed, or Dead End.
-- **Notes and evidence** — record descriptions, observations, repeatable steps, tags, and supporting files.
-- **Search** — find nodes across titles, notes, tags, and evidence details.
-- **Local projects** — autosave projects in your browser and manage multiple investigations.
-- **Portable exports** — save or import project files as JSON and export a tree view to PDF.
-- **Undo and redo** — step back through supported changes.
+No account, backend, analytics, telemetry or external API is required. The stylesheet uses a Google Fonts import for DM Sans/DM Mono; remove the `@import` line to keep even fonts fully offline.
 
-## Built with
+## Requirements
 
-React, Vite, React Flow, IndexedDB, jsPDF, html-to-image, and Vitest.
+- Windows 10/11
+- Node.js 20 LTS or later (npm is included)
+- A current Chromium-based browser such as Edge or Chrome
 
-No account, backend, or external API is required. Project data is stored locally in your browser. The app's stylesheet imports Google Fonts; remove that import if you want to avoid the external font request.
+## Install and run
 
-## Getting started
-
-### Requirements
-
-- Node.js 20 or later
-- npm
-- A modern browser such as Chrome or Microsoft Edge
-
-### Run locally
-
-1. Clone or download this repository.
-2. Open a terminal in the project folder.
+1. Extract the `attacker-tree` folder.
+2. Open PowerShell in that folder.
 3. Install dependencies:
 
-   ```bash
+   ```powershell
    npm install
    ```
 
 4. Start the development server:
 
-   ```bash
+   ```powershell
    npm run dev
    ```
 
-5. Open the local URL shown in the terminal, usually `http://127.0.0.1:5173`.
+5. Open the local URL printed by Vite (normally `http://127.0.0.1:5173`).
 
-### Other commands
+Build a production bundle with `npm run build`. To preview the built bundle locally, run `npm run preview`.
 
-```bash
-npm test       # Run tests
-npm run build  # Create a production build
-npm run preview # Preview the production build locally
+## Use
+
+- **Create a project:** select **New**, then enter a name. The root node represents the overall target/objective.
+- **Add branches:** select a node and click its `+` button, use **Add child**, or press `N`. Use **Shift+N** to add a sibling.
+- **Edit:** select a node and use the right-side inspector. Double-click the node title or click the pencil to rename it.
+- **Statuses:** choose Untested, Investigating, Confirmed or Dead End in the inspector. Marking a node Dead End asks before applying the status to descendants.
+- **Notes and recreation:** write findings, observations, commands and repeatable steps in the relevant text fields.
+- **Evidence:** attach PNG/JPG/JPEG screenshots or TXT files (5 MB maximum per file). Evidence is kept in IndexedDB and included in the portable JSON project.
+- **Tags:** add a tag with or without a leading `#`; suggestions include predefined and previously used tags.
+- **Identical nodes:** choose another node in the inspector and link it. The relationship is stored separately from the parent-child tree.
+- **Search:** open Search or press `Ctrl+F`. Results cover names, descriptions, notes, recreation, tags, and evidence filenames/text. Click a result to centre on it.
+- **Navigate:** use the canvas controls, mouse wheel, drag the blank canvas to pan, or drag nodes to reposition. **Tidy layout** restores a simple hierarchy.
+- **Focus:** select a node and choose **Focus branch**; use **Exit focus** or `Esc` to return to the full tree.
+- **Save/reopen:** changes autosave to local IndexedDB. **Save file** downloads a portable JSON project, including evidence. **Import** loads a JSON project as a separate local project.
+- **PDF:** choose **PDF** to generate a read-only preview and then **Download PDF**.
+- **Undo/redo:** `Ctrl+Z` and `Ctrl+Y`. `Ctrl+S` requests an immediate local save.
+
+## Tests
+
+```powershell
+npm test
 ```
-
-## Basic workflow
-
-1. Create a project and use its root node for the overall objective.
-2. Add child nodes to map possible paths or investigation steps.
-3. Select a node to edit its status, notes, tags, and evidence.
-4. Use search and branch focus to navigate larger trees.
-5. Export a JSON project file for backup or sharing, or generate a PDF snapshot.
 
 ## Data and privacy
 
-Projects are saved in your browser's local IndexedDB storage and are not sent to a project backend. Clearing browser site data may delete local projects, so export important work regularly. Evidence files are limited to 5 MB each, and portable project imports are limited to 20 MB.
+Project data remains in the browser profile's IndexedDB unless you explicitly download or import a project file. Clearing browser site data can remove locally stored projects; export portable project files regularly. Imported project files are treated as JSON data, not executable code.
 
-## Project status
+Evidence accepts image MIME types for PNG/JPEG and checks that the image can be decoded, or plain text/TXT. File names are normalised to remove path separators. Each evidence file is limited to 5 MB; portable project imports are limited to 20 MB.
 
-Attacker Tree is a functional starter implementation and may not cover every advanced workflow. Large trees may be difficult to read in the current single-page PDF export. Review the app carefully before relying on it for production assessment workflows.
+## Current implementation notes
 
-## Responsible use
-
-Use Attacker Tree only for systems you own or have explicit permission to assess. Keep exported project files and evidence secure, especially when they contain sensitive findings.
+This is a functional starter implementation, but it does **not yet implement every item** in the long specification. In particular, automatic depth-five collapsing, full drag-and-drop snap guides, a multi-page PDF layout for very large trees, full history coverage for every evidence/file operation, and a dedicated project-manager screen need further development. PDF rendering currently exports the canvas view as one fitted page, so very large trees may be small. Please verify the app against your full acceptance checklist before presenting it as production-complete.
