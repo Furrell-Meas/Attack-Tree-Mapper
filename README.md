@@ -1,5 +1,7 @@
 # Attacker Tree
 
+I wanted an easy way to manage and track my pentesting process/methods. This was a personal project to make a simple way to keep track of what I've done, what I must still do, and where I'm at.
+
 A local-first, manually operated attack-tree documentation workspace for authorised security assessments and cybersecurity learning. It records investigation paths; it does not scan targets or execute exploits.
 
 ## Technology choices
